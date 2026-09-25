@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vòng Quay Tài Liệu Ngữ Văn - Săn Văn Mẫu Hay</title>
+    <!-- Font Awesome cho icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #831843; /* Màu đỏ đun/văn học */
+            --primary-hover: #9f1239;
+            --accent-color: #d97706; /* Màu vàng đồng */
+            --bg-color: #1e1b18;
+            --card-bg: #2a2623;
+            --text-color: #f3f4f6;
+            --text-muted: #d1d5db;
+            --border-color: #443e38;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: radial-gradient(circle at 50% 10%, #3a322b 0%, #1e1b18 70%);
+        }
+
+        /* Container xác thực (Đăng nhập / Đăng ký) */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid var(--border-color);
+        }
+
+        .auth-card h2 {
+            margin-bottom: 8px;
+            text-align: center;
+            color: #fde047;
+            font-size: 26px;
+            font-family: 'Merriweather', serif;
+        }
+
+        .auth-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #191614;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #b45309, #d97706);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .auth-switch {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .auth-switch a {
+            color: #fde047;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .error-msg {
+            color: #f87171;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .success-msg {
+            color: #34d399;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        /* Giao diện chính sau khi đăng nhập */
+        .main-app {
+            display: none;
+            width: 100%;
+            max-width: 950px;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info i {
+            color: #fde047;
+        }
+
+        .user-info span {
+            font-weight: 700;
+            color: #fde047;
+            font-size: 16px;
+        }
+
+        .btn-logout {
+            background: #991b1b;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .btn-logout:hover { background: #7f1d1d; }
+
+        /* Khu vực Vòng Quay */
+        .wheel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .wheel-section h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 24px;
+            color: #fde047;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .wheel-section p.subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .turns-display {
+            font-size: 16px;
+            margin-bottom: 20px;
+            background: #191614;
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .turns-display strong {
+            color: #fde047;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: 10px 0 20px 0;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #d97706;
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s cubic-bezier(0.15, 0.95, 0.15, 1);
+            box-shadow: 0 0 25px rgba(217, 119, 6, 0.4);
+        }
+
+        .wheel-slice {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            left: 0;
+            top: 0;
+        }
+
+        /* Kim chỉ vị trí trúng thưởng */
+        .wheel-pointer {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 32px solid #ef4444;
+            z-index: 10;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.6));
+        }
+
+        .spin-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75px;
+            height: 75px;
+            background: radial-gradient(circle, #f59e0b, #b45309);
+            border: 4px solid white;
+            border-radius: 50%;
+            color: white;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 1px;
+        }
+
+        .spin-btn:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        /* Lịch sử tài liệu nhận được */
+        .history-section {
+            margin-top: 25px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 20px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .history-section h3 {
+            margin-bottom: 15px;
+            font-size: 17px;
+            color: #fde047;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Merriweather', serif;
+        }
+
+        .history-list {
+            list-style: none;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .history-list li {
+            padding: 10px 14px;
+            background: #191614;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .history-list li span i {
+            color: #d97706;
+            margin-right: 6px;
+        }
+
+        /* Modal Thông Báo Kết Quả */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 35px 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        .modal-content i.fa-award {
+            font-size: 50px;
+            color: #fde047;
+            margin-bottom: 15px;
+        }
+
+        .modal-content h3 { color: #fde047; margin-bottom: 12px; font-size: 22px; font-family: 'Merriweather', serif; }
+        .modal-content p { margin-bottom: 25px; font-size: 15px; color: var(--text-muted); line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <!-- KHU VỰC ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="authContainer" class="auth-container">
+        <!-- Form Đăng Nhập -->
+        <div id="loginCard" class="auth-card">
+            <h2>Kho Tàng Ngữ Văn</h2>
+            <p class="auth-subtitle">Đăng nhập để quay thưởng nhận tài liệu văn mẫu</p>
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" id="loginUser" placeholder="Nhập tên đăng nhập...">
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="loginPass" placeholder="Nhập mật khẩu...">
+            </div>
+            <div id="loginError" class="error-msg">Tên đăng nhập hoặc mật khẩu không chính xác!</div>
+            <button class="btn" style="margin-top: 10px;" onclick="handleLogin()">Đăng Nhập</button>
+            <div class="auth-switch">
+                Chưa có tài khoản? <a href="#" onclick="switchTab('register')">Đăng ký thành viên</a>
+            </div>
+        </div>
+
+        <!-- Form Đăng Ký -->
+        <div id="registerCard" class="auth-card" style="display: none;">
+            <h2>Đăng Ký Tài Khoản</h2>
+            <p class="auth-subtitle">Tạo tài khoản cá nhân (Hệ thống chống trùng tên)</p>
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" id="regUser" placeholder="Ví dụ: hoclv_van">
+                <div id="regUserError" class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> Tên đăng nhập này đã tồn tại trong hệ thống! Vui lòng chọn tên khác.</div>
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="regPass" placeholder="Tạo mật khẩu bảo mật...">
+            </div>
+            <div id="regSuccess" class="success-msg"><i class="fa-solid fa-circle-check"></i> Đăng ký thành công! Đang chuyển hướng...</div>
+            <button class="btn" style="margin-top: 10px;" onclick="handleRegister()">Đăng Ký Ngay</button>
+            <div class="auth-switch">
+                Đã có tài khoản? <a href="#" onclick="switchTab('login')">Đăng nhập ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- KHU VỰC GIAO DIỆN CHÍNH (VÒNG QUAY) -->
+    <div id="mainApp" class="main-app">
+        <header>
+            <div class="user-info">
+                <i class="fa-solid fa-feather-pointed fa-2x"></i>
+                <div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Thành viên:</p>
+                    <span id="displayUsername">User</span>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</button>
+        </header>
+
+        <div class="wheel-section">
+            <h1>Vòng Quay Săn Văn Mẫu Chất Lượng</h1>
+            <p class="subtitle">Nhận ngay đề văn nghị luận, phân tích truyện ngắn và sơ đồ tư duy siêu chi tiết</p>
+            <div class="turns-display">Lượt quay còn lại hôm nay: <strong id="turnsCount">5</strong></div>
+            
+            <div class="wheel-container">
+                <div class="wheel-pointer"></div>
+                <button class="spin-btn" id="spinBtn" onclick="spinWheel()">QUAY</button>
+                <div class="wheel" id="wheel"></div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h3><i class="fa-solid fa-book-bookmark"></i> Sổ Tay Tài Liệu Đã Trúng</h3>
+            <ul class="history-list" id="historyList">
+                <li><span><i class="fa-solid fa-info-circle"></i> Chưa có tài liệu nào trong sổ tay. Hãy quay ngay!</span><span>-</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal Thông Báo Trúng Thưởng -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <i class="fa-solid fa-award"></i>
+            <h3>Chúc Mừng Bạn!</h3>
+            <p id="modalText">Bạn đã nhận được tài liệu: ...</p>
+            <button class="btn" onclick="closeModal()">Lưu Vào Sổ Tay</button>
+        </div>
+    </div>
+
+    <script>
+        // Danh sách tài liệu chuyên sâu môn Ngữ Văn (Nghị luận & Phân tích truyện)
+        const prizes = [
+            { text: "Đề NLXH: Sống có khát vọng", color: "#701a75" },
+            { text: "Phân tích nhân vật Mị (Vợ chồng A Phủ)", color: "#9f1239" },
+            { text: "Bí quyết mở bài Nghị Luận Văn Học cực hay", color: "#b45309" },
+            { text: "Phân tích truyện ngắn Chiếc Thuyền Ngoài Xa", color: "#1e40af" },
+            { text: "Bộ đề Nghị Luận Xã Hội 200 chữ chọn lọc", color: "#065f46" },
+            { text: "Cần cù bù thông minh (Chúc may mắn lần sau)", color: "#374151" },
+            { text: "Phân tích bài thơ Sóng (Xuân Quỳnh)", color: "#831843" },
+            { text: "Sơ đồ tư duy 12 tác phẩm trọng tâm", color: "#1e3a8a" }
+        ];
+
+        let currentUser = null;
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        // Khởi tạo vòng quay trên giao diện
+        function initWheel() {
+            const wheel = document.getElementById('wheel');
+            wheel.innerHTML = '';
+            const sliceAngle = 360 / prizes.length;
+
+            prizes.forEach((prize, index) => {
+                const slice = document.createElement('div');
+                slice.className = 'wheel-slice';
+                slice.style.transform = `rotate(${index * sliceAngle}deg)`;
+                slice.style.backgroundColor = prize.color;
+                wheel.appendChild(slice);
+            });
+        }
+
+        // Chuyển đổi tab Đăng nhập / Đăng ký
+        function switchTab(tab) {
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('regUserError').style.display = 'none';
+            document.getElementById('regSuccess').style.display = 'none';
+            
+            if(tab === 'login') {
+                document.getElementById('loginCard').style.display = 'block';
+                document.getElementById('registerCard').style.display = 'none';
+            } else {
+                document.getElementById('loginCard').style.display = 'none';
+                document.getElementById('registerCard').style.display = 'block';
+            }
+        }
+
+        // Xử lý Đăng Ký (Không trùng tên đăng nhập)
+        function handleRegister() {
+            const username = document.getElementById('regUser').value.trim();
+            const password = document.getElementById('regPass').value.trim();
+            const errorMsg = document.getElementById('regUserError');
+            const successMsg = document.getElementById('regSuccess');
+
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            if(!username || !password) {
+                alert("Vui lòng điền đầy đủ tên đăng nhập và mật khẩu!");
+                return;
+            }
+
+            // Lấy danh sách users từ localStorage
+            let users = JSON.parse(localStorage.getItem('vanHocWheelUsers')) || {};
+
+            // Kiểm tra trùng tên đăng nhập
+            if(users[username]) {
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Lưu tài khoản mới kèm 5 lượt quay mặc định
+            users[username] = {
+                password: password,
+                turns: 5,
+                history: []
+            };
+
+            localStorage.setItem('vanHocWheelUsers', JSON.stringify(users));
+            successMsg.style.display = 'block';
+
+            setTimeout(() => {
+                switchTab('login');
+                document.getElementById('regUser').value = '';
+                document.getElementById('regPass').value = '';
+            }, 1500);
+        }
+
+        // Xử lý Đăng Nhập
+        function handleLogin() {
+            const username = document.getElementById('loginUser').value.trim();
+            const password = document.getElementById('loginPass').value.trim();
+            const loginError = document.getElementById('loginError');
+
+            loginError.style.display = 'none';
+
+            let users = JSON.parse(localStorage.getItem('vanHocWheelUsers')) || {};
+
+            if(users[username] && users[username].password === password) {
+                currentUser = username;
+                localStorage.setItem('vanHocCurrentSession', username);
+                loadUserData();
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'flex';
+                initWheel();
+            } else {
+                loginError.style.display = 'block';
+            }
+        }
+
+        // Đăng xuất
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('vanHocCurrentSession');
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+        }
+
+        // Tải dữ liệu người dùng
+        function loadUserData() {
+            if(!currentUser) return;
+            document.getElementById('displayUsername').innerText = currentUser;
+            
+            let users = JSON.parse(localStorage.getItem('vanHocWheelUsers'));
+            let userData = users[currentUser];
+
+            document.getElementById('turnsCount').innerText = userData.turns;
+            updateHistoryUI(userData.history);
+        }
+
+        // Quay thưởng
+        function spinWheel() {
+            if(isSpinning) return;
+
+            let users = JSON.parse(localStorage.getItem('vanHocWheelUsers'));
+            let userData = users[currentUser];
+
+            if(userData.turns <= 0) {
+                alert("Bạn đã dùng hết lượt quay miễn phí hôm nay rồi!");
+                return;
+            }
+
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+
+            // Trừ 1 lượt
+            userData.turns -= 1;
+            document.getElementById('turnsCount').innerText = userData.turns;
+            users[currentUser] = userData;
+            localStorage.setItem('vanHocWheelUsers', JSON.stringify(users));
+
+            // Xác định phần thưởng ngẫu nhiên
+            const prizeIndex = Math.floor(Math.random() * prizes.length);
+            const sliceAngle = 360 / prizes.length;
+            
+            const extraSpins = 6; 
+            const targetAngle = 360 - (prizeIndex * sliceAngle + sliceAngle / 2);
+            currentRotation += (extraSpins * 360) + targetAngle - (currentRotation % 360);
+
+            const wheel = document.getElementById('wheel');
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
+
+                const wonPrize = prizes[prizeIndex].text;
+                const timeString = new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}) + ' - ' + new Date().toLocaleDateString('vi-VN');
+                
+                userData.history.unshift({ prize: wonPrize, time: timeString });
+                users[currentUser] = userData;
+                localStorage.setItem('vanHocWheelUsers', JSON.stringify(users));
+
+                updateHistoryUI(userData.history);
+
+                document.getElementById('modalText').innerText = `Chúc mừng bạn đã sở hữu tài liệu:\n"${wonPrize}"`;
+                document.getElementById('resultModal').style.display = 'flex';
+            }, 4000);
+        }
+
+        // Cập nhật lịch sử
+        function updateHistoryUI(history) {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+
+            if(!history || history.length === 0) {
+                historyList.innerHTML = '<li><span><i class="fa-solid fa-info-circle"></i> Chưa có tài liệu nào trong sổ tay. Hãy quay ngay!</span><span>-</span></li>';
+                return;
+            }
+
+            history.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span><i class="fa-solid fa-scroll"></i> ${item.prize}</span> <span style="font-size:12px; opacity:0.8;">${item.time}</span>`;
+                historyList.appendChild(li);
+            });
+        }
+
+        // Đóng modal
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        // Kiểm tra phiên đăng nhập sẵn có
+        window.onload = function() {
+            const savedSession = localStorage.getItem('vanHocCurrentSession');
+            if(savedSession) {
+                let users = JSON.parse(localStorage.getItem('vanHocWheelUsers')) || {};
+                if(users[savedSession]) {
+                    currentUser = savedSession;
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'flex';
+                    loadUserData();
+                    initWheel();
+                }
+            }
+        };
+    </script>
+</body>
+</html>
